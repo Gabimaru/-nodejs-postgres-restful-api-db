@@ -11,6 +11,7 @@ export default (sequelize) => {
         },
         task: {
             type: DataTypes.TEXT,
+            allowNull: false,
         },
         done: {
             type: DataTypes.BOOLEAN,

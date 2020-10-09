@@ -24,6 +24,7 @@ try {
 }
 
 // Local network configuration
+//const IP = "172.19.238.240"
 const IP = '127.0.0.1'
 const PORT = 7777
 
@@ -80,6 +81,11 @@ const getUserByApiKey = async (req, res, next) => {
     }
 }
 
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Content-Type')
+    next()
+})
 app.use(bodyParser.json()) // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: false })) // to support URL-encoded bodies
 
@@ -101,12 +107,13 @@ app.post('/register', async (req, res) => {
     }
 })
 
-app.post('/link', async (req, res) => {
-    //const ownerId = req.user.id
-    const description = req.body.description
+app.post('/create', async (req, res) => {
+    const ownerId = req.user.id
+    const task = req.body.task
     try {
         const todo = await Todo.create({
-            /*owner_id: ownerId,*/ task: description,
+            owner_id: ownerId,
+            task: task,
         })
         res.status(200).json({ code: 200, data: todo })
     } catch (e) {
@@ -114,9 +121,29 @@ app.post('/link', async (req, res) => {
     }
 })
 
-app.use(getApiKey)
-app.use(validateApiKey)
-app.use(getUserByApiKey)
+//task delete
+
+app.post('/delete/:task', async (req, res) => {
+    const task = req.params.task
+    try {
+        await Todo.destroy({
+            where: { task: task },
+        })
+        res.status(200).json({
+            code: 200,
+            data: task,
+        })
+    } catch (e) {
+        res.status(500).json({
+            code: 500,
+            data: 'Internal server error',
+        })
+    }
+})
+
+//app.use(getApiKey)
+//app.use(validateApiKey)
+//app.use(getUserByApiKey)
 
 // GET user by id
 app.get('/id/:id', async (req, res) => {
@@ -151,6 +178,16 @@ app.get('/name/:name', async (req, res) => {
         }
     } catch (e) {
         res.status(500).json({ code: 500, data: 'Internal server error' })
+    }
+})
+
+// Show todos
+app.get('/todos', async (req, res) => {
+    try {
+        const todo = await Todo.findAll({ attributes: ['task', 'done'] })
+        res.json({ code: 200, data: todo })
+    } catch (e) {
+        res.status(500).json({ code: 500, data: '' })
     }
 })
 
