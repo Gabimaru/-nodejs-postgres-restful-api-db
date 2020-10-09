@@ -11,8 +11,16 @@ mdp = "strongpassword123"
 ```
 
 ```
+CREATE DATABASE db_todo;
+```
+
+```
 \c db_todo
 \dt
+```
+
+```
+node ./src/api-server.js
 ```
 
 ```

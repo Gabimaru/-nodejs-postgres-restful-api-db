@@ -24,7 +24,7 @@ try {
 }
 
 // Local network configuration
-const IP = '172.17.52.88'
+const IP = '127.0.0.1'
 const PORT = 7777
 
 const app = express()
