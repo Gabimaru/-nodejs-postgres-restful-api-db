@@ -205,6 +205,7 @@ app.post('/send', async (req, res) => {
     }
 })
 
+/*
 app.get('/read', async (req, res) => {
     try {
         const user_id = req.user.id
@@ -230,7 +231,7 @@ app.get('/read', async (req, res) => {
         res.status(500).json({ code: 500, data: 'Internal server error.' })
     }
 })
-
+*/
 //BEFORE Exercice 7
 /*
 app.get('/blacklist/:id', async (req, res) => {
