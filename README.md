@@ -1,4 +1,4 @@
-# Projet Projet Web Dev - Partie Backend -
+# Projet Web Dev - Partie Backend -
 
 ## Création du projet
 
