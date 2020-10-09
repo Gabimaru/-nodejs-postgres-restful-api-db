@@ -49,4 +49,7 @@ DROP TABLE users, todos;
 
 ```
 git status
+git add .
+git commit -m "correction"
+git push
 ```
