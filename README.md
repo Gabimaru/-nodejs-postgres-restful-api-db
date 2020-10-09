@@ -44,3 +44,9 @@ SELECT * FROM todos;
 
 DROP TABLE users, todos;
 ```
+
+## Raccourci copié/collé
+
+```
+git status
+```
