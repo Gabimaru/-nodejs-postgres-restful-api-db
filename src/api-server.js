@@ -1,12 +1,5 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import Sequelize from 'sequelize'
-// const Op = Sequelize.Op // Bad trick
-
-/*
-import * as sq from 'sequelize'
-let Op = sq.Op
-*/
 
 // import sequelize connector and User and Todo models instances
 // import { sequelize, User, Todo } from './models/db.js'
@@ -24,7 +17,6 @@ try {
 }
 
 // Local network configuration
-//const IP = "172.19.238.240"
 const IP = '127.0.0.1'
 const PORT = 7777
 
@@ -89,13 +81,7 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json()) // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: false })) // to support URL-encoded bodies
 
-/*
-Endpoint for user registration. 
-input:
-{
-    "name": string,
-}
-*/
+// Ajouter un utilisateur à la table "users"
 app.post('/register', async (req, res) => {
     //check name n'et pas null.
     const name = req.body.name
@@ -107,12 +93,13 @@ app.post('/register', async (req, res) => {
     }
 })
 
+// Ajouter une tâche à la table "todos"
 app.post('/create', async (req, res) => {
-    const ownerId = req.user.id
+    // const ownerId = req.user.id
     const task = req.body.task
     try {
         const todo = await Todo.create({
-            owner_id: ownerId,
+            /*owner_id: ownerId,*/
             task: task,
         })
         res.status(200).json({ code: 200, data: todo })
@@ -144,6 +131,16 @@ app.post('/delete/:task', async (req, res) => {
 //app.use(getApiKey)
 //app.use(validateApiKey)
 //app.use(getUserByApiKey)
+
+// Show todos
+app.get('/todos', async (req, res) => {
+    try {
+        const todo = await Todo.findAll({ attributes: ['task', 'done'] })
+        res.json({ code: 200, data: todo })
+    } catch (e) {
+        res.status(500).json({ code: 500, data: '' })
+    }
+})
 
 // GET user by id
 app.get('/id/:id', async (req, res) => {
@@ -181,16 +178,6 @@ app.get('/name/:name', async (req, res) => {
     }
 })
 
-// Show todos
-app.get('/todos', async (req, res) => {
-    try {
-        const todo = await Todo.findAll({ attributes: ['task', 'done'] })
-        res.json({ code: 200, data: todo })
-    } catch (e) {
-        res.status(500).json({ code: 500, data: '' })
-    }
-})
-
 // GET all users
 app.get('/users', async (req, res) => {
     try {
@@ -206,103 +193,6 @@ app.get('/users', async (req, res) => {
         res.status(500).json({ code: 500, data: 'Internal server error' })
     }
 })
-
-// See comments at end of file for an old version
-app.get('/blacklist/:id', async (req, res) => {
-    if (req.user.id !== 1) {
-        res.status(403).json({ code: 403, data: 'Not allowed' })
-    } else {
-        try {
-            const id = req.params.id
-            await User.update({ active: false }, { where: { id: id } })
-            res.status(200).send({ code: 200, data: 'User blacklisted' })
-        } catch (e) {
-            res.status(500).json({ code: 500, data: 'Internal server error' })
-        }
-    }
-})
-
-app.get('/whitelist/:id', async (req, res) => {
-    if (req.user.id !== 1) {
-        res.status(403).json({ code: 403, data: 'Not allowed' })
-    } else {
-        try {
-            const id = req.params.id
-            await User.update({ active: true }, { where: { id: id } })
-            res.status(200).send({ code: 200, data: 'User whitelisted' })
-        } catch (e) {
-            res.status(500).json({ code: 500, data: 'Internal server error' })
-        }
-    }
-})
-
-//Send a task to a user
-app.post('/send', async (req, res) => {
-    const owner_id = req.user.owner_id
-    const task = req.body.task
-    const done = req.body.done
-    const date = req.body.date
-    try {
-        const todo = await Todo.create({
-            owner_id: owner_id,
-            task: task,
-            done: done,
-            date: date,
-        })
-        res.status(200).json({ code: 200, data: todo })
-    } catch (e) {
-        res.status(500).json({ code: 500, data: 'Internal server error' })
-    }
-})
-
-/*
-app.get('/read', async (req, res) => {
-    try {
-        const user_id = req.user.id
-        const todos = await Todo.findAll({
-            where: {
-                [Op.or]: [
-                    {
-                        src: {
-                            [Op.eq]: user_id,
-                        },
-                    },
-                    {
-                        dst: {
-                            [Op.eq]: user_id,
-                        },
-                    },
-                ],
-            },
-            order: [['updatedAt', 'desc']],
-        })
-        res.status(200).json({ code: 200, data: todos })
-    } catch (e) {
-        res.status(500).json({ code: 500, data: 'Internal server error.' })
-    }
-})
-*/
-//BEFORE Exercice 7
-/*
-app.get('/blacklist/:id', async (req, res) => {
-    const key = req.headers.authorization
-    try {
-        const user = await User.findAll({
-            attributes: ['id', 'name', 'api_key'],
-            where: { api_key: key },
-        })
-        if (user[0].id === 1) {
-            const id = req.params.id
-            await User.update({ active: false }, { where: { id: id } })
-            res.status(200).send({ code: 200, data: 'User blacklisted' })
-        } else {
-            res.status(403).send({ code: 403, data: 'Not allowed' })
-        }
-    } catch (e) {
-        res.status(500).json({ code: 500, data: e })
-    }
-})
-*/
 
 // Start express server
 app.listen(PORT, IP, () => {
