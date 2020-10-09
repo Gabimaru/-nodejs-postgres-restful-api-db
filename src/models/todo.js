@@ -8,21 +8,16 @@ export default (sequelize) => {
         },
         owner_id: {
             type: DataTypes.INTEGER,
-            unique: true,
-            //autoIncrement: true,
         },
         task: {
             type: DataTypes.TEXT,
-            // unique: true,
-            allowNull: false,
         },
         done: {
             type: DataTypes.BOOLEAN,
-            defaultValue: null,
+            defaultValue: false,
         },
         date: {
             type: DataTypes.DATE,
-            allowNull: true,
         },
     })
 

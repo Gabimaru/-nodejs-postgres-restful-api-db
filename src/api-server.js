@@ -1,7 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import Sequelize from 'sequelize'
-const Op = Sequelize.Op // Bad trick
+// const Op = Sequelize.Op // Bad trick
 
 /*
 import * as sq from 'sequelize'
@@ -98,6 +98,19 @@ app.post('/register', async (req, res) => {
         res.json({ code: 200, data: user })
     } catch (e) {
         res.status(500).json({ code: 500, data: 'Internal server error' })
+    }
+})
+
+app.post('/link', async (req, res) => {
+    //const ownerId = req.user.id
+    const description = req.body.description
+    try {
+        const todo = await Todo.create({
+            /*owner_id: ownerId,*/ task: description,
+        })
+        res.status(200).json({ code: 200, data: todo })
+    } catch (e) {
+        res.status(500).json({ code: 500, data: e })
     }
 })
 
