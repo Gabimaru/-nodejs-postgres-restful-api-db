@@ -43,10 +43,13 @@ SELECT * FROM users;
 SELECT * FROM todos;
 
 *Raccourci pour test*
-DROP TABLE users, todos;
 ```
 
-## Raccourci copié/collé
+## Raccourci copié/collé pour test et push
+
+```
+DROP TABLE users, todos;
+```
 
 ```
 git status
