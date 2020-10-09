@@ -41,8 +41,6 @@ node ./src/api-server.js
 SELECT * FROM users;
 
 SELECT * FROM todos;
-
-*Raccourci pour test*
 ```
 
 ## Raccourci copié/collé pour test et push
