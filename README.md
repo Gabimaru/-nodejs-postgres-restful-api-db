@@ -42,6 +42,7 @@ SELECT * FROM users;
 
 SELECT * FROM todos;
 
+*Raccourci pour test*
 DROP TABLE users, todos;
 ```
 
